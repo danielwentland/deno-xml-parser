@@ -36,7 +36,7 @@ interface XmlAttribute {
  * @api public
  */
 
-export default function parse(xml: string): Document {
+function parse(xml: string): Document {
   xml = xml.trim();
 
   // strip comments, whitespaces and newlines
@@ -188,3 +188,5 @@ export default function parse(xml: string): Document {
     return 0 == xml.indexOf(prefix);
   }
 }
+
+export {parse}
