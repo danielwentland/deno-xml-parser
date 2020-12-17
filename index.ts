@@ -113,13 +113,20 @@ export default function parse(xml: string): Document {
   }
 
   /**
-   * Text content.
+   * Get text content
+   * 
+   * Gets plain content and CDATA content.
+   * 
+   * @returns {string} Content of xml tag
    */
-
-  function content() {
-    var m = match(/^([^<]*)/);
-    if (m) return m[1];
-    return "";
+  function content(): string {
+    var m = match(/((^<!\[CDATA\[)(.*?)(\]\]>)|^([^<]*))/)
+    if (!m) return ""
+    
+    if (m[2] == '<![CDATA['){
+      return m[3]
+    }
+    return m[1]
   }
 
   /**
