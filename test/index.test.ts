@@ -332,3 +332,31 @@ test("CDATA", () => {
     ],
   });
 });
+
+test("Encoded content", () => {
+  const node = parse(`
+    <root>
+      <data1>&amp;</data1>
+      <data2>&lt;&gt;</data2>
+    </root>`
+  );
+  assertEquals(node.root, {
+    name: "root",
+    attributes: {},
+    content: "",
+    children: [
+      {
+        name: "data1",
+        attributes: {},
+        children: [],
+        content: "&<>1",
+      },
+      {
+        name: "data2",
+        attributes: {},
+        children: [],
+        content: "<>",
+      },
+    ],
+  });
+});
