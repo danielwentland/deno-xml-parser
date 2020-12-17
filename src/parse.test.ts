@@ -1,15 +1,15 @@
 import {
   assertEquals,
 } from "https://deno.land/std/testing/asserts.ts";
-import parse from "../index.ts";
-const { test } = Deno
+import {parse} from "./../src/parse.ts";
 
-test("blankStrings", () => {
+
+Deno.test("blankStrings", () => {
   const node = parse("");
   assertEquals(node, { declaration: undefined, root: undefined });
 });
 
-test("declarations", () => {
+Deno.test("declarations", () => {
   const node = parse('<?xml version="1.0" ?>');
   assertEquals(node, {
     declaration: {
@@ -21,7 +21,7 @@ test("declarations", () => {
   });
 });
 
-test("comments", () => {
+Deno.test("comments", () => {
   const node = parse("<!-- hello --><foo></foo><!-- world -->");
   assertEquals(node.root, {
     name: "foo",
@@ -31,7 +31,7 @@ test("comments", () => {
   });
 });
 
-test("tags", () => {
+Deno.test("tags", () => {
   const node = parse("<foo></foo>");
   assertEquals(node.root, {
     name: "foo",
@@ -41,7 +41,7 @@ test("tags", () => {
   });
 });
 
-test("tagsWithText", () => {
+Deno.test("tagsWithText", () => {
   const node = parse("<foo>hello world</foo>");
   assertEquals(node.root, {
     name: "foo",
@@ -51,7 +51,7 @@ test("tagsWithText", () => {
   });
 });
 
-test("weirdWhitespace", () => {
+Deno.test("weirdWhitespace", () => {
   const node = parse("<foo \n\n\nbar\n\n=   \nbaz>\n\nhello world</\n\nfoo>");
   assertEquals(node.root, {
     name: "foo",
@@ -61,7 +61,7 @@ test("weirdWhitespace", () => {
   });
 });
 
-test("tagsWithAttributes", () => {
+Deno.test("tagsWithAttributes", () => {
   const node = parse(
     "<foo bar=baz some=\"stuff here\" whatever='whoop'></foo>"
   );
@@ -77,7 +77,7 @@ test("tagsWithAttributes", () => {
   });
 });
 
-test("nestedTags", () => {
+Deno.test("nestedTags", () => {
   const node = parse("<a><b><c>hello</c></b></a>");
   assertEquals(node.root, {
     name: "a",
@@ -101,7 +101,7 @@ test("nestedTags", () => {
   });
 });
 
-test("tagsWithText", () => {
+Deno.test("tagsWithText", () => {
   const node = parse("<a>foo <b>bar <c>baz</c></b></a>");
   assertEquals(node.root, {
     name: "a",
@@ -125,7 +125,7 @@ test("tagsWithText", () => {
   });
 });
 
-test("selfClosingTags", () => {
+Deno.test("selfClosingTags", () => {
   const node = parse('<a><b>foo</b><b a="bar" /><b>bar</b></a>');
   assertEquals(node.root, {
     name: "a",
@@ -155,7 +155,7 @@ test("selfClosingTags", () => {
   });
 });
 
-test("selfClosingTagsWithoutAttributes", () => {
+Deno.test("selfClosingTagsWithoutAttributes", () => {
   const node = parse("<a><b>foo</b><b /> <b>bar</b></a>");
   assertEquals(node.root, {
     name: "a",
@@ -183,7 +183,7 @@ test("selfClosingTagsWithoutAttributes", () => {
   });
 });
 
-test("multilineComments", () => {
+Deno.test("multilineComments", () => {
   const node = parse("<a><!-- multi-line\n comment\n test -->foo</a>");
   assertEquals(node.root, {
     name: "a",
@@ -193,7 +193,7 @@ test("multilineComments", () => {
   });
 });
 
-test("attributesWithHyphen", () => {
+Deno.test("attributesWithHyphen", () => {
   const node = parse('<a data-bar="baz">foo</a>');
   assertEquals(node.root, {
     name: "a",
@@ -205,7 +205,7 @@ test("attributesWithHyphen", () => {
   });
 });
 
-test("tagsWithDot", () => {
+Deno.test("tagsWithDot", () => {
   const node = parse(
     '<root><c:Key.Columns><o:Column Ref="ol1"/></c:Key.Columns><c:Key.Columns><o:Column Ref="ol2"/></c:Key.Columns></root>'
   );
@@ -246,7 +246,7 @@ test("tagsWithDot", () => {
   });
 });
 
-test("tagsWithHyphen", () => {
+Deno.test("tagsWithHyphen", () => {
   const node = parse(
     "<root>" +
       "<data-field1>val1</data-field1>" +
@@ -274,7 +274,7 @@ test("tagsWithHyphen", () => {
   });
 });
 
-test("Multiline comment at beginning", () => {
+Deno.test("Multiline comment at beginning", () => {
   const node = parse(`
     <!-- Test 
        Long comment
@@ -305,7 +305,7 @@ test("Multiline comment at beginning", () => {
   });
 });
 
-test("CDATA", () => {
+Deno.test("CDATA", () => {
   const node = parse(`
     <root>
       <data-field1><![CDATA[data&field<>1]]></data-field1>
@@ -333,7 +333,7 @@ test("CDATA", () => {
   });
 });
 
-test("Encoded content", () => {
+Deno.test("Encoded content", () => {
   const node = parse(`
     <root>
       <data1>Data &amp; Test</data1>
