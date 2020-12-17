@@ -1,17 +1,16 @@
 interface Document {
   declaration: XmlDeclaration | undefined
-  root: {
-    name: string;
-    attributes: XmlAttributes
-    children: XmlNode[];
-  } | undefined;
+  root: XmlRoot | undefined
 }
+
 type XmlAttributes = {
   [name: string]: string;
 }
+
 interface XmlNode extends XmlRoot{
   content?: string;
 }
+
 interface XmlRoot {
   name: string;
   attributes: XmlAttributes;
