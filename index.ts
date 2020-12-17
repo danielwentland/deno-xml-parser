@@ -1,3 +1,4 @@
+import {decodeXML} from "https://raw.githubusercontent.com/DenoBRComunitty/entities/master/mod.ts"
 interface Document {
   declaration: XmlDeclaration | undefined
   root: XmlRoot | undefined
@@ -139,7 +140,7 @@ export default function parse(xml: string): Document {
     if (m[2] == '<![CDATA['){
       return m[3]
     }
-    return m[1]
+    return decodeXML(m[1])
   }
 
   /**
