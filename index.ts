@@ -1,26 +1,38 @@
 interface Document {
-  declaration: {
-    attributes: {};
-  };
+  declaration: XmlDeclaration | undefined
   root: {
     name: string;
-    attributes: {};
-    children: any[];
+    attributes: XmlAttributes
+    children: XmlNode[];
   } | undefined;
 }
-
-interface Xml {
-  name: string;
-  attributes: any;
-  content?: string;
-  children: Xml[];
+type XmlAttributes = {
+  [name: string]: string;
 }
+interface XmlNode extends XmlRoot{
+  content?: string;
+}
+interface XmlRoot {
+  name: string;
+  attributes: XmlAttributes;
+  children: XmlNode[];
+}
+
+interface XmlDeclaration {
+  attributes: XmlAttributes
+}
+
+interface XmlAttribute {
+   name: string
+   value: string
+}
+
 
 /**
  * Parse the given string of `xml`.
  *
- * @param {String} xml
- * @return {Object}
+ * @param {string} xml
+ * @return {Document}
  * @api public
  */
 
@@ -47,37 +59,39 @@ export default function parse(xml: string): Document {
    * Declaration.
    */
 
-  function declaration() {
+  function declaration(): XmlDeclaration | undefined {
+    var attr: XmlAttribute|undefined
     var m = match(/^<\?xml\s*/);
     if (!m) return;
 
     // tag
-    var node: any = {
+    var xmlDeclaration: XmlDeclaration =  {
       attributes: {}
-    };
+    }
 
     // attributes
     while (!(eos() || is("?>"))) {
-      var attr = attribute();
-      if (!attr) return node;
-      node.attributes[attr.name] = attr.value;
+      attr = attribute();
+      if (!attr) return xmlDeclaration;
+      xmlDeclaration.attributes[attr.name] = attr.value;
     }
 
     match(/\?>\s*/);
 
-    return node;
+    return xmlDeclaration;
   }
 
   /**
    * Tag.
    */
 
-  function tag() {
+  function tag(): XmlNode | undefined {
     var m = match(/^<([\w-:.]+)\s*/);
+    var attr: XmlAttribute | undefined
     if (!m) return;
 
     // name
-    var node: Xml = {
+    var node: XmlNode = {
       name: m[1],
       attributes: {},
       children: []
@@ -85,7 +99,7 @@ export default function parse(xml: string): Document {
 
     // attributes
     while (!(eos() || is(">") || is("?>") || is("/>"))) {
-      var attr = attribute();
+      attr = attribute();
       if (!attr) return node;
       node.attributes[attr.name] = attr.value;
     }
@@ -133,7 +147,7 @@ export default function parse(xml: string): Document {
    * Attribute.
    */
 
-  function attribute() {
+  function attribute(): XmlAttribute | undefined {
     var m = match(/([\w:-]+)\s*=\s*("[^"]*"|'[^']*'|\w+)\s*/);
     if (!m) return;
     return { name: m[1], value: strip(m[2]) };
@@ -143,7 +157,7 @@ export default function parse(xml: string): Document {
    * Strip quotes from `val`.
    */
 
-  function strip(val: string) {
+  function strip(val: string): string {
     return val.replace(/^['"]|['"]$/g, "");
   }
 
@@ -151,7 +165,7 @@ export default function parse(xml: string): Document {
    * Match `re` and advance the string.
    */
 
-  function match(re: RegExp) {
+  function match(re: RegExp): string[] | undefined {
     var m = xml.match(re);
     if (!m) return;
     xml = xml.slice(m[0].length);
@@ -162,7 +176,7 @@ export default function parse(xml: string): Document {
    * End-of-source.
    */
 
-  function eos() {
+  function eos(): boolean {
     return 0 == xml.length;
   }
 
@@ -170,7 +184,7 @@ export default function parse(xml: string): Document {
    * Check for `prefix`.
    */
 
-  function is(prefix: string) {
+  function is(prefix: string): boolean {
     return 0 == xml.indexOf(prefix);
   }
 }
