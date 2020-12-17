@@ -336,8 +336,8 @@ test("CDATA", () => {
 test("Encoded content", () => {
   const node = parse(`
     <root>
-      <data1>&amp;</data1>
-      <data2>&lt;&gt;</data2>
+      <data1>Data &amp; Test</data1>
+      <data2>&lt;/br&gt;</data2>
     </root>`
   );
   assertEquals(node.root, {
@@ -349,13 +349,13 @@ test("Encoded content", () => {
         name: "data1",
         attributes: {},
         children: [],
-        content: "&<>1",
+        content: "Data & Test",
       },
       {
         name: "data2",
         attributes: {},
         children: [],
-        content: "<>",
+        content: "</br>",
       },
     ],
   });
