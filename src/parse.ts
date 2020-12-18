@@ -1,4 +1,4 @@
-import {decodeXML} from "https://raw.githubusercontent.com/DenoBRComunitty/entities/master/mod.ts"
+import {decodeXML} from "../deps.ts"
 interface Document {
   declaration: XmlDeclaration | undefined
   root: XmlRoot | undefined

@@ -1,6 +1,6 @@
 import {
   assertEquals,
-} from "https://deno.land/std/testing/asserts.ts";
+} from "../deps.ts";
 import {parse} from "./../src/parse.ts";
 
 
