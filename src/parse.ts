@@ -1,28 +1,28 @@
 import {decodeXML} from "../deps.ts"
-interface Document {
+export interface Document {
   declaration: XmlDeclaration | undefined
   root: XmlRoot | undefined
 }
 
-type XmlAttributes = {
+export type XmlAttributes = {
   [name: string]: string;
 }
 
-interface XmlNode extends XmlRoot{
+export interface XmlNode extends XmlRoot{
   content?: string;
 }
 
-interface XmlRoot {
+export interface XmlRoot {
   name: string;
   attributes: XmlAttributes;
   children: XmlNode[];
 }
 
-interface XmlDeclaration {
+export interface XmlDeclaration {
   attributes: XmlAttributes
 }
 
-interface XmlAttribute {
+export interface XmlAttribute {
    name: string
    value: string
 }
